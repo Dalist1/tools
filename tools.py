@@ -144,7 +144,7 @@ while options == True:
 			line()
 			print(" === > Installing Gnome-Tweaks...")
 			line()
-			cmdb10 = os.system("apt install gnome-tweaks")
+			cmdb10 = os.system("apt install gnome-tweaks -y")
 			line()
 			print(" === > Updating and upgrading... ")
 			line()
