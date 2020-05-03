@@ -22,7 +22,6 @@ if imgcmddown.returncode != 0 and imgcmdusr.returncode != 0:
 	print("Quitting...")
 	sys.exit()
 else:
-	subprocess.run("mv {homedir}/Downloads/{iconname} /usr/share/icons", shell=True, capture_output=True, text=True)
 	image = "/usr/share/{iconname}"
 	image = image.split("/")[-1]
 	image = f'/usr/share/icons/{iconname}'
@@ -32,26 +31,16 @@ else:
 	terminal = input("=> Spawn a terminal? (Choose: Yes or No): ")
 	while True:
 		if terminal == "yes" or terminal == "Yes" or terminal == "YES":
-			terminal = "True"
+			terminal = "true"
 			break
 		elif terminal == "no" or terminal =="NO" or terminal == "No":
-			terminal = "False"
+			terminal = "false"
 			break
 		else:
 			print("[\033[1;91m!\033[1;m] Please enter a valid option!")
 			continue
 
-	desktop = f'''
-	[Desktop Entry]
-	Version=1.0
-	Name={name}
-	Comment=Waves
-	Exec={execu}
-	Icon={image}
-	Terminal={terminal}
-	Type=Application
-	Categories=Utility;Application;
-	'''
+	desktop = f"[Desktop Entry]\nVersion=1.0\nName={name}\nComment=Waves\nExec={execu}\nIcon={image}\nTerminal={terminal}\nType=Application\nCategories=Utility;Application;"
 
 	with open(f"/usr/share/applications/{name}.desktop", "w+") as e:
 		e.write(desktop)
