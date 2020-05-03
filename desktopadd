@@ -4,7 +4,7 @@ import os
 import subprocess
 import sys
 
-
+#Run this as root!
 
 user = os.popen("w | grep /usr/lib/ | head -n 1 | awk '{print $1;}'").read().rstrip()
 homedir = f"/home/{user}"
