@@ -4,18 +4,37 @@ import os
 import subprocess
 import sys
 
+homedir = os.popen("cd $HOME ; pwd").read()
+
+print("")
 name = input("=> Enter the app name: ")
-image = input("=> Enter the icon full PATH: ")
-imgcmd = subprocess.run(f"cp {image} /usr/share/icons",shell=True, capture_output=True, text=True)
-if imgcmd.returncode != 0:
-	print("Icon was not found in that path... ")
+iconname = input("=> Enter Downloaded icon name: ")
+imgcmddown = subprocess.run(f"cp {homedir}/Downloads/{iconname} /usr/share/icons", shell=True, capture_output=True, text=True)
+imgcmdusr = subprocess.run(f"file /usr/share/icons/{iconname}",shell=True, capture_output=True, text=True)
+
+
+if imgcmddown.returncode != 0 and imgcmdusr.returncode != 0:
+	print("")
+	print("Icon with that name was not found under \033[1;91m{homedir}/Downloads/{iconname}\033[1;m nor under \033[1;91m/usr/share/icons/{iconname}\033[1;m... ")
+	print("Quitting...")
 	sys.exit()
-else: 
+else:
+	image = "/usr/share/{iconname}"
 	image = image.split("/")[-1]
-	image = f'/usr/share/icons/{image}'
-	print(f"[\033[1;32m+\033[1;m] Icon sent to \033[1;32m{image}\033[1;m.")
+	image = f'/usr/share/icons/{iconname}'
+	print(f"[\033[1;32m+\033[1;m] Icon located at \033[1;32m{image}\033[1;m.")
 
 	execu = input("=> Enter the executable command: ")
+	terminal = input("=> Spawn a terminal? (Choose: Yes or No): ")
+	if terminal == "yes" or terminal == "Yes" or terminal == "YES":
+		terminal = "True"
+	elif terminal == "no" or terminal =="NO" or terminal == "No":
+		terminal = "False"
+
+	else:
+		print("")
+
+
 
 	#********************
 	desktop = f'''
@@ -25,7 +44,7 @@ else:
 	Comment=Waves
 	Exec={execu}
 	Icon={image}
-	Terminal=false
+	Terminal={terminal}
 	Type=Application
 	Categories=Utility;Application;
 	'''
@@ -35,5 +54,6 @@ else:
 	with open(f"/usr/share/applications/{name}.desktop", "w+") as e:
 		e.write(desktop)
 
-	print("Done.")
+	print("")
+	print(f"[\033[1;32m+\033[1;m] Created Desktop App at \033[1;32m/usr/share/applications/{name}.desktop\033[1;m.")
 
