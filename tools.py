@@ -51,8 +51,6 @@ def leaving():
 	print(" [\033[1;32m ok \033[1;m] Removing temporary files")
 	sleep(1.5)
 	print("")
-	os.system("rm -rf /tmp*")
-	print("")
 	print(" [\033[1;32m ok \033[1;m] Cleaning the system")
 	print("")
 	sleep(1.5)
