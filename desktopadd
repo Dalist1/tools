@@ -3,8 +3,19 @@
 import os 
 import subprocess
 import sys
+import platform
 
 #Run this as root!
+
+if platform.system() != 'Linux':
+	print("Please use Linux!")
+	sys.exit()
+
+if os.getuid() != 0:
+	print ("[\033[1;91m !! \033[1;m] Start the script as root! ")
+	print("[\033[1;91m !! \033[1;m] Use > '\033[1;32msudo\033[1;m' and try again.")
+	sys.exit()
+
 
 user = os.popen("w | grep /usr/lib/ | head -n 1 | awk '{print $1;}'").read().rstrip()
 homedir = f"/home/{user}"
