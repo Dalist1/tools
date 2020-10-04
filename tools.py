@@ -94,7 +94,7 @@ while options == True:
 	print("")
 	print("1) Install Oh-My-Zsh")
 	print("----------------------------")
-	print("2) Install Brave, Steam, Sublime-Text(LATEST), Gnome-Tweaks, Spotify, Persepolis, Htop ")
+	print("2) Install Brave, Steam, Sublime-Text(LATEST), Gnome-Tweaks, Spotify, Persepolis")
 	print("----------------------------")
 	print("3) Speed up & optimize tweaks")
 	print("----------------------------")
