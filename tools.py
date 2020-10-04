@@ -2,12 +2,28 @@
 
 import os 
 import sys
-import time
 from time import sleep
+import py7zr
+import requests
+
+while True:
+	try:
+		if not "done" in open(".toolsdata").read():
+			print("\nSome libraries not detected. Installing...\n")
+			os.system("pip3 install py7zr; pip3 install requests; echo done > .toolsdata")
+			break
+		else:
+			break
+	except FileNotFoundError:
+		os.system("touch .toolsdata")
+		continue
+
+	
+
 
 if os.getuid() != 0:
 	print ("/_\\ Sorry,this script requires sudo privledges, run as root! ")
-	print("Use > 'sudo -i' and run the script again.")
+	print("Use > 'sudo su' and run the script again.")
 	sys.exit()
 
 #*******************************************Open & Read**************************************************
@@ -49,16 +65,16 @@ def clear():
 def leaving():
 	print("")
 	print(" [\033[1;32m ok \033[1;m] Removing temporary files")
-	sleep(1.5)
 	print("")
 	print(" [\033[1;32m ok \033[1;m] Cleaning the system")
 	print("")
-	sleep(1.5)
 	os.system("apt-get -y clean && apt-get -y autoremove && apt-get -y autoclean")
 	print("")
 	print(" [\033[1;91m ++ \033[1;m]\033[1;32m Created by \033[1;m\033[1;36mDalist\033[1;m")
 	sleep(1.5)
 	print("")
+	os.system("rm -rf gobuster-linux-amd64 gobuster-linux-amd64.7z")
+
 
 def done():
 	print("")
@@ -78,7 +94,7 @@ while options == True:
 	print("")
 	print("1) Install Oh-My-Zsh")
 	print("----------------------------")
-	print("2) Install Chrome, Steam, Sublime-Text(3207), Stacer, Gnome-Tweaks ")
+	print("2) Install Brave, Steam, Sublime-Text(LATEST), Gnome-Tweaks, Spotify ")
 	print("----------------------------")
 	print("3) Speed up & optimize tweaks")
 	print("----------------------------")
@@ -86,7 +102,11 @@ while options == True:
 	print("----------------------------")
 	print("5) Customize the OS ")
 	print("----------------------------")
-	print("6) EXIT ")
+	print("6) Install hacking tools for Ubuntu ")
+	print("----------------------------")
+	print("7) Wordlists optimized for Penetration Testing")
+	print("----------------------------")
+	print("8) EXIT ")
 	print("")
 	option = input("➜  Choose an item: ")
 
@@ -114,14 +134,9 @@ while options == True:
 		elif option == "2":
 			clear()
 			line()
-			print(" === > Downloading Chrome... ")
+			print(" === > Downloading and Installing Brave... ")
 			line()
-			cmdb1 = os.system("wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb")
-			line()
-			print(" === > Installing Chrome... ")
-			line()
-			cmdb2 = os.system("dpkg -i google-chrome-stable_current_amd64.deb")
-			cmdb5 = os.system("rm -rf google-chrome-stable_current_amd64.deb")
+			os.system("apt install apt-transport-https curl -y; curl -s https://brave-browser-apt-nightly.s3.brave.com/brave-core-nightly.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/brave-browser-prerelease.gpg add -	; echo \"deb [arch=amd64] https://brave-browser-apt-nightly.s3.brave.com/ stable main\" | sudo tee /etc/apt/sources.list.d/brave-browser-nightly.list ; apt update; apt install brave-browser-nightly -y")
 			line()
 			print(" === > Installing Steam... ")
 			line()
@@ -137,12 +152,13 @@ while options == True:
 			line()
 			print(" === > Installing Stacer... ")
 			line()
-			cmdb8 = os.system("dpkg -i stacer_1.1.0_amd64.deb")
-			cmdb9 = os.system("rm -rf stacer_1.1.0_amd64.deb")
-			line()
 			print(" === > Installing Gnome-Tweaks...")
 			line()
 			cmdb10 = os.system("apt install gnome-tweaks -y")
+			line()
+			print("Installing Spotify...")
+			line()
+			os.system("snap install spotify")
 			line()
 			print(" === > Updating and upgrading... ")
 			line()
@@ -203,8 +219,61 @@ while options == True:
 			cmde6 = os.system("rm -rf ~/.mozilla")
 			done()
 
-
 		elif option == "6":
+				line()
+				print("Fetching latest version of Linpeas into /opt/bins directory")
+				line()
+				#Linpeas
+				lp = requests.get("https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh").text
+				writepeas = open("/opt/bins/lp", "w+")
+				writepeas.write(lp)
+				os.chmod("/opt/bins/lp", 509)
+				line()
+				print("Installing hacking tools: \033[1;34mzbarimg\033[1;m, \033[1;34mbinwalk\033[1;m, \033[1;34mzsteg\033[1;m, \033[1;34mstegoveritas\033[1;m, \033[1;34mstegcracker\033[1;m, \033[1;34msqlmap\033[1;m, \033[1;34mexiftool\033[1;m, \033[1;34msteghide\033[1;m, \033[1;34mforemost\033[1;m, \033[1;34mnmap\033[1;m.")
+				line()
+				os.system("apt-get install -y zbar-tools nmap binwalk foremost exiftool steghide; gem install zsteg; pip3 install stegcracker; pip3 install stegoveritas")
+				line()
+				try:
+					busterversion = os.popen("curl -s https://raw.githubusercontent.com/OJ/gobuster/9ef3642d170d71fd79093c0aa0c23b6f2a4c1c64/libgobuster/version.go | grep -o \'\"[^\"]\\+\"\' | tr \'\"\' \' \'").read().replace(" ", "").rstrip("\n")
+
+				except:
+					print("Failed to detect GoBuster Version, hence skipping.")
+					print(busterversion)
+
+				print(f"Installing GoBuster version {busterversion} [LATEST]")
+				line()
+
+				os.system(f"wget https://github.com/OJ/gobuster/releases/download/v{busterversion}/gobuster-linux-amd64.7z")
+
+				#Unzipping
+				with py7zr.SevenZipFile("gobuster-linux-amd64.7z", mode='r') as z:
+					z.extractall()
+				os.system("mv gobuster-linux-amd64/gobuster /usr/bin; chmod +x /usr/bin/gobuster")
+
+				line()
+				print("Installing Metasploit-Framework...")
+				line()
+				os.system("curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall ; rm -rf msfinstall")
+
+
+
+		elif option == "7":
+			line()
+			print("Fetching the wordlists. This might take a while...")
+			line()
+			os.system("mkdir -p /opt/dirs; mkdir -p /opt/pass")
+			big = requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/big.txt").text
+			bigwrite = open("/opt/dirs/big.txt", "w+")
+			bigwrite.write(big)
+			print("[+] Downloaded \033[1;34mbig.txt\033[1;m under \033[1;34m/opt/dirs/big.txt\033[1;m")
+			rock = requests.get("https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt").text
+			rockwrite = open("/opt/pass/rockyou.txt", "w+")
+			rockwrite.write(rock)
+			print("[+] Downloaded \033[1;34mrockyou.txt\033[1;m under \033[1;34m/opt/pass/rockyou.txt\033[1;m")
+			os.system("cp /opt/dirs/big.txt /opt/pass/; sed -e \'s/^/svc-/\' -i /opt/pass/big.txt; mv /opt/pass/big.txt /opt/pass/krb-wordlist")
+
+
+		elif option == "8":
 			leaving()
 			exit()
 
@@ -217,11 +286,13 @@ while options == True:
 
 
 		print("")
-		option2 = input("> Do you want to choose another action ? Press (y) for YES and (n) for NO: ")
+		option2 = input("> Continue [Y/n]: ")
 		if option2 == "y":
 			break
 			options = True
 		if option2 == "n":
 			leaving()
-			tools = False
-			options = False
+			sys.exit(1)
+
+
+
